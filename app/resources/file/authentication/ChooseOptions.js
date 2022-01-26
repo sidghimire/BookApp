@@ -52,7 +52,7 @@ const styles=StyleSheet.create({
     backgroundImage:{
         width: '100%',
         height:300,
-        marginTop:30,
+        marginTop:20,
         marginBottom:10
     },
     titleText:{
