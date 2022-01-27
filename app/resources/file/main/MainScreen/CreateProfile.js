@@ -1,14 +1,70 @@
-import { View, Text, StyleSheet,TextInput,Button } from 'react-native';
-import React, { useState } from 'react';
+import { View, Text, StyleSheet,TextInput,Button,TouchableOpacity } from 'react-native';
+import React, { useState,useEffect } from 'react';
 import {getAuth} from 'firebase/auth'
 import DatePicker from 'react-native-date-picker'
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { firebaseConfig } from '../../../../firebase';
+import {getFirestore,doc,setDoc,getDoc} from 'firebase/firestore/lite'
+import AppLoader from "../../../assets/animations/AppLoader.js";
 
-const CreateProfile = () => {
-    const [email,setEmail]=useState("");
+const CreateProfile = ({navigation}) => {
+    const db=getFirestore();
+    const [isLoading,setIsLoading]=useState(false);
+    
     const auth=getAuth();
     const [date, setDate] = useState(new Date())
     const [open, setOpen] = useState(false)
+
+    const [name,setName]=useState("");
+    const [phone,setPhone]=useState("");
+    const [isProfileCreated,setIsProfileCreated]=useState(false);
+    useEffect(() => {
+ 
+      // Set the count variable value to Zero.
+   
+      getUserName();
+   
+    }, [] );
+
+    const getUserName=()=>{
+      const userUid=auth.currentUser.uid;
+      const docRef=doc(db,"profile",userUid);
+      setIsLoading(true);
+      getDoc(docRef).then((docSnap)=>{
+        setIsLoading(false);
+        if(docSnap.exists()){
+          setName(docSnap.data()['name']);
+          setPhone(docSnap.data()['phone']);
+          if(docSnap.data()['email']!=null && docSnap.data()['name']!=null && docSnap.data()['phone']!=null ){
+           setIsProfileCreated(true)
+          }else{
+            setIsProfileCreated(false)
+          }
+        }
+      })
+      
+    }
+  
+
+    const onFormSubmit=async()=>{
+      
+      const userUid=auth.currentUser.uid;
+      const docRef=doc(db,"profile",userUid);
+      const data={
+        name:name,
+        phone:phone,
+        email:auth.currentUser.email,
+        uid:auth.currentUser.uid
+      }
+      setIsLoading(true);
+      setDoc(docRef,data).then(()=>{
+        setIsLoading(false);
+        navigation.navigate("HomeContainer");
+      }).catch(error=>
+        {
+          alert(error)
+        },{merge:true});
+    }
+
   return (
     <View style={styles.container}>
         <View style={styles.header}>
@@ -22,11 +78,11 @@ const CreateProfile = () => {
         </View>
         <View style={styles.textInputUnit}>
             <Text style={styles.inputLabel}>Name</Text>
-            <TextInput style={styles.textInput} placeholder="Enter your name" value={email} onChangeText={text=>setEmail(text)} placeholderTextColor="#bbb" />
+            <TextInput style={styles.textInput} placeholder="Enter your name" value={name} onChangeText={text=>setName(text)} placeholderTextColor="#bbb" />
         </View>
         <View style={styles.textInputUnit}>
             <Text style={styles.inputLabel}>Phone No.</Text>
-            <TextInput style={styles.textInput} placeholder="Enter your phone number" value={email} onChangeText={text=>setEmail(text)} placeholderTextColor="#bbb" />
+            <TextInput style={styles.textInput} placeholder="Enter your phone number" value={phone} onChangeText={text=>setPhone(text)} placeholderTextColor="#bbb" />
         </View>
 
         <View style={styles.textInputUnit}>
@@ -50,10 +106,14 @@ const CreateProfile = () => {
             />
         </View>
         <View style={styles.textInputUnit}>
-            <TouchableOpacity activeOpacity={0.8} style={styles.createNewProfile} >
+            <TouchableOpacity activeOpacity={0.8} style={styles.createNewProfile} onPress={onFormSubmit} >
                 <Text style={{color:"#fff",textAlign:'center'}}>Create Profile</Text>
             </TouchableOpacity>
         </View>
+        {
+          isLoading?<AppLoader />:null
+        }
+        
     </View>
   );
 };

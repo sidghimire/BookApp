@@ -19,7 +19,6 @@ const HomeContainer = () => {
         <BottomTab.Navigator screenOptions={{
             tabBarShowLabel:false,
           }}>
-            <BottomTab.Screen name="CreateProfile" component={CreateProfile} options={{title:"Home",headerShown:false,tabBarIcon:()=>{return(<Icon name="home-outline" size={25} color="#000" solid  />)}}} />
             <BottomTab.Screen name="Home" component={Home} options={{title:"Home",headerShown:false,tabBarIcon:()=>{return(<Icon name="home-outline" size={25} color="#000" solid  />)}}} />
             <BottomTab.Screen name="Bookmark" component={Bookmark} options={{headerShown:false,tabBarIcon:()=>{return(<Icon name="bookmark-outline" size={25} color="#000" solid  />)}}} />
             <BottomTab.Screen name="ListenAudio" component={ListenAudio} options={{headerShown:false,tabBarIcon:()=>{return(<Icon name="music-circle-outline" size={25} color="#000" solid  />)}}} />

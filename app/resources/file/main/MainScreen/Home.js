@@ -1,8 +1,10 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React,{useState} from 'react';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
+import Book from "../../../assets/json/bookList.json"
 
 const Home = () => {
+  console.log(Book);
   const [isEbook,setIsEbook]=useState(true);
   const [isAudio,setIsAudio]=useState(false);
   return (

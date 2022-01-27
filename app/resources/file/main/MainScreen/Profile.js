@@ -1,10 +1,38 @@
 import { View, Text, Image, StyleSheet } from 'react-native';
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import blankProfile from "../../../assets/blank-profile.png";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
-
+import AppLoader from '../../../assets/animations/AppLoader';
+import {getAuth} from 'firebase/auth'
+import {getFirestore,doc,setDoc,getDoc} from 'firebase/firestore/lite'
 
 const Profile = () => {
+  const db=getFirestore();
+  const [isLoading,setIsLoading]=useState(false);
+  
+  const [name,setName]=useState("");
+
+  const auth=getAuth();
+  useEffect(() => {
+    getUserName();
+  }, [] );
+
+  const getUserName=()=>{
+    const userUid=auth.currentUser.uid;
+    const docRef=doc(db,"profile",userUid);
+    setIsLoading(true);
+    getDoc(docRef).then((docSnap)=>{
+      setIsLoading(false);
+      if(docSnap.exists()){
+        setName(docSnap.data()['name']);
+        if(docSnap.data()['email']!=null && docSnap.data()['name']!=null && docSnap.data()['phone']!=null ){
+        }else{
+        }
+      }else{
+      }
+    })
+    
+  }
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -16,7 +44,7 @@ const Profile = () => {
       </View>
       <View>
         <Image source={blankProfile} style={styles.profileImage}/>
-        <Text style={styles.profileName}>Billy Gomez</Text>
+        <Text style={styles.profileName}>{name}</Text>
         <Text style={styles.profileBio}>Bio: Hey How You Doing</Text>
       </View>
       <View style={{flexDirection:'row',marginTop:20}}>
@@ -33,6 +61,9 @@ const Profile = () => {
           <Text style={styles.profileStatsLabel}>Books Viewed</Text>
         </View>
       </View>
+      {
+        isLoading?<AppLoader/>:null
+      }
     </View>
   );
 };
