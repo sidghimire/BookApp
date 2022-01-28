@@ -6,7 +6,7 @@ import CreateProfile from './MainScreen/CreateProfile';
 import {getAuth} from 'firebase/auth'
 import {getFirestore,doc,setDoc,getDoc} from 'firebase/firestore/lite'
 import AppLoader from '../../assets/animations/AppLoader';
-
+import OpenBook from './MainScreen/OpenBook';
 const Stack=createStackNavigator();
 
 const HomeContainerSecondary = () => {
@@ -47,20 +47,22 @@ const HomeContainerSecondary = () => {
   }else{
     if(isProfileCreated){
       return (
-        <Stack.Navigator initialRouteName="HomeContainer" screenOptions={{headerShown:false}}>
+        <Stack.Navigator initialRouteName="HomeContainer" >
 
             <Stack.Screen name="CreateProfile" component={CreateProfile} options={{headerShown:false}} />
             <Stack.Screen name="HomeContainer" component={HomeContainer} options={{headerShown:false}} />
+            <Stack.Screen name="OpenBook" component={OpenBook} options={{headerShown:true,title:""}} />
             
         </Stack.Navigator>
     );
   
     }else{
       return (
-        <Stack.Navigator initialRouteName="CreateProfile" screenOptions={{headerShown:false}}>
+        <Stack.Navigator initialRouteName="CreateProfile" >
 
             <Stack.Screen name="CreateProfile" component={CreateProfile} options={{headerShown:false}} />
             <Stack.Screen name="HomeContainer" component={HomeContainer} options={{headerShown:false}} />
+            <Stack.Screen name="OpenBook" component={OpenBook} options={{headerShown:true,title:""}} />
             
         </Stack.Navigator>
     );

@@ -1,12 +1,23 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList,Image } from 'react-native';
 import React,{useState} from 'react';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import Book from "../../../assets/json/bookList.json"
 
-const Home = () => {
+const Home = ({navigation}) => {
   console.log(Book);
   const [isEbook,setIsEbook]=useState(true);
   const [isAudio,setIsAudio]=useState(false);
+
+  const renderBook=({item})=>{
+    return(
+      <TouchableOpacity style={styles.bookCardView} onPress={()=>navigation.navigate("OpenBook",{isbn:item['isbn']})} activeOpacity={0.7}>
+          <Image
+          style={styles.bookImage}
+          source={{uri:item['thumbnailUrl']}}
+          />      
+      </TouchableOpacity>
+    )
+  }
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -24,7 +35,18 @@ const Home = () => {
           <Text style={styles.text1}>AudioBooks</Text>
         </TouchableOpacity>
       </View>
+          
+      <View style={{flex:1,padding:20,paddingBottom:10,paddingTop:10,backgroundColor:"#f7f7f7"}}>
+        <FlatList
+        data={Book}
+        renderItem={renderBook}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        numColumns={2}
+        />
+      </View>
     </View>
+
   );
 };
 
@@ -49,7 +71,8 @@ const styles=StyleSheet.create({
         marginHorizontal:15,
         borderColor:'#e8e8e8',
         borderWidth:1,
-        borderRadius:10
+        borderRadius:10,
+        margin:10
     },
     text1:{
         color:'#000',
@@ -60,6 +83,24 @@ const styles=StyleSheet.create({
       flex:1,
       padding:15,
       borderRadius:10,
+  
+    },
+    bookCardView:{
+      width:"50%",
+      padding:10,
+      borderRadius:10,
+      alignSelf:"center",
+      justifyContent:"center",
+      
+    },
+    bookImage:{
+      width: "100%", 
+      height: 220,
+      alignSelf:"center",
+      justifyContent:"center",
+      borderRadius:20,
+      borderColor:"#e8e8e8",
+      borderWidth:2
     }
 })  
 
