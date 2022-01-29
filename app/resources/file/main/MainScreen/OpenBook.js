@@ -1,34 +1,109 @@
 import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import Book from "../../../assets/json/bookList.json"
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import Icon from "react-native-vector-icons/MaterialCommunityIcons"
+import { getAuth } from 'firebase/auth';
+import {doc,setDoc,getDoc,getDocs,query,where,getFirestore, collection,onSnapShot} from 'firebase/firestore/lite';
+import AppLoader from "../../../assets/animations/AppLoader.js";
+
+const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+function generateString(length) {
+    let result = '';
+    const charactersLength = characters.length;
+    for ( let i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+}
+
 const OpenBook = ({route,navigation}) => {
+    useEffect(() => {
+ 
+        // Set the count variable value to Zero.
+     
+          getLikeOrNot();
+          setIsLoading(false);
+      }, [] );
+    const [isLoading,setIsLoading]=useState(null)
+    const auth=getAuth();
     const {isbn} = route.params;
     let book={}
-    console.log(Book);
     for(var i=0;i<Book.length;i++){
         if(Book[i]['isbn']==isbn){
             book=Book[i];
             break;
         }
     }
+    const [bookmark,setBookmark]=useState(false);
     const publishedDate=(book['publishedDate']['$date']).split('T')[0];
-    console.log(book);
+    
+    const db=getFirestore();
+
+    const likeBook=async()=>{
+        setBookmark(!bookmark);
+        const likeRef=collection(db,"likeBooks");
+        let data={}
+        const likeUID=generateString(16)
+        data={
+            user:auth.currentUser.uid,
+            isbn:isbn,
+            likeUID:generateString(16)
+        }
+        await setDoc(doc(likeRef,likeUID),data)
+        .then(()=>{
+        }).catch(error=>{
+            console.log(error);
+        },{merge:true});
+
+    }
+
+    const getLikeOrNot=async()=>{
+
+        const likeRef=collection(db,"likeBooks");
+        const q=query(likeRef,where("isbn","==",isbn),where("user","==",auth.currentUser.uid));
+        setIsLoading(true);
+        await getDocs(q).then((docSnap)=>{
+            let count=0;
+            docSnap.forEach((doc)=>{
+                count++
+            })
+            if(count>0){
+                setBookmark(true);
+            }
+        })
+        setIsLoading(false);
+    }
+    
+
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.bookTitle}>{book['title']}</Text>
-      <View>
-        <FlatList
-            data={book['authors']}
-            horizontal={true}
-            renderItem={
-                ({item}) => 
-                <Text style={styles.bookAuthor}>{item}</Text>
-            }/>
-        </View>
-            <Text style={{textAlign:'right'}}>
-                <Text style={{color:'#000'}}>Date:</Text> {publishedDate}
-            </Text>
+    <View style={styles.container}>
+        <ScrollView contentContainerStyle={{padding:20,paddingBottom:0}} >
+        <Text style={styles.bookTitle}>{book['title']}</Text>
+            <View>
+            <FlatList
+                data={book['authors']}
+                horizontal={true}
+                renderItem={
+                    ({item}) => 
+                    <Text style={styles.bookAuthor}>{item}</Text>
+                }/>
+            </View>
+            <View style={{display:'flex',flexDirection:'row'}}>
+                <Text style={{textAlign:'left',flex:1}}>
+                    <Text style={{color:'#000'}}>Date:</Text> {publishedDate}
+                </Text>
+                <TouchableOpacity activeOpacity={0.8} style={{textAlign:'right',flex:1,paddingRight:20}} onPress={likeBook}>
+                    {
+                        (isLoading==null)?null:<Icon name={bookmark?'heart':'heart-outline'} size={30} color='#a83f39'/>
+                    }
+                    
+                    
+                </TouchableOpacity>
+            </View>
+            
             <Image
             style={styles.bookImage}
             source={{uri:book['thumbnailUrl']}}
@@ -39,7 +114,15 @@ const OpenBook = ({route,navigation}) => {
             <Text style={styles.shortDescription}>
                 {book['longDescription']}
             </Text>
-    </ScrollView>
+            
+        </ScrollView>
+        {
+            !isLoading?
+        null
+        :<AppLoader/>
+}
+    </View>
+
   );
 };
 
@@ -47,7 +130,6 @@ const styles=StyleSheet.create({
     container:{
         flex:1,
         backgroundColor:'#fff',
-        padding:20,
     },
     bookTitle:{
         fontSize:35,
@@ -67,8 +149,8 @@ const styles=StyleSheet.create({
         paddingHorizontal:10
     },
     bookImage:{
-        width:"80%",
-        height:"30%",
+        width:"90%",
+        height:400,
         alignSelf:"center",
         borderRadius:10,
         borderWidth:2,
@@ -79,6 +161,7 @@ const styles=StyleSheet.create({
         color:'#444',
         fontSize:20,
         textAlign:'justify',
+        lineHeight:30
     }
 });
 

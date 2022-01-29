@@ -4,7 +4,6 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import Book from "../../../assets/json/bookList.json"
 
 const Home = ({navigation}) => {
-  console.log(Book);
   const [isEbook,setIsEbook]=useState(true);
   const [isAudio,setIsAudio]=useState(false);
 
