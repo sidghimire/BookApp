@@ -4,7 +4,7 @@ import Book from "../../../assets/json/bookList.json"
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import { getAuth } from 'firebase/auth';
-import {doc,setDoc,getDoc,getDocs,query,where,getFirestore, collection,onSnapShot} from 'firebase/firestore/lite';
+import {doc,setDoc,deleteDoc,getDocs,query,where,getFirestore, collection,onSnapShot} from 'firebase/firestore/lite';
 import AppLoader from "../../../assets/animations/AppLoader.js";
 
 const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -52,12 +52,27 @@ const OpenBook = ({route,navigation}) => {
             isbn:isbn,
             likeUID:generateString(16)
         }
-        await setDoc(doc(likeRef,likeUID),data)
-        .then(()=>{
-        }).catch(error=>{
-            console.log(error);
-        },{merge:true});
-
+        const q=query(likeRef,where("isbn","==",isbn),where("user","==",auth.currentUser.uid));
+        await getDocs(q).then(async(docSnap)=>{
+            let count=0;
+            let id=null
+            docSnap.forEach((doc)=>{
+                count++;
+                id=doc.id;
+            })
+            if(count==0){
+                await setDoc(doc(likeRef,likeUID),data)
+                .then(()=>{
+                }).catch(error=>{
+                    console.log(error);
+                },{merge:true});        
+            }else{
+                await deleteDoc(doc(likeRef,id))
+                .then(()=>{
+                })
+            }
+        })
+        
     }
 
     const getLikeOrNot=async()=>{

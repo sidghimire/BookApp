@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, FlatList,Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList,Image, Touchable } from 'react-native';
 import React,{useState} from 'react';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import Book from "../../../assets/json/bookList.json"
@@ -22,7 +22,9 @@ const Home = ({navigation}) => {
         <Text style={styles.headerText}>
           All Books
         </Text>
-        <Icon name="magnify" size={30} color="#000" solid  />
+        <TouchableOpacity activeOpacity={0.8} onPress={()=>navigation.navigate('Current')}>
+          <Icon name="magnify" size={30} color="#000" solid  />
+        </TouchableOpacity>
 
       </View>
       <View style={styles.secondaryHeader}>

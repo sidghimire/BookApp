@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet,TouchableOpacity,FlatList } from 'react-native';
+import { View,RefreshControl, Text, Image, StyleSheet,TouchableOpacity,FlatList } from 'react-native';
 import React,{useEffect,useState} from 'react';
 import blankProfile from "../../../assets/blank-profile.png";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
@@ -121,6 +121,11 @@ const Profile = ({navigation}) => {
         {
         bookmark? 
         <FlatList
+          refreshControl={
+            <RefreshControl
+            refreshing={isLoading}
+            onRefresh={getLikeOrNot}/>
+          }
           data={likedData}
           renderItem={renderBook}
           showsVerticalScrollIndicator={false}
