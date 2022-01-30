@@ -22,7 +22,7 @@ const HomeContainer = () => {
             <BottomTab.Screen name="Home" component={Home} options={{title:"Home",headerShown:false,tabBarIcon:()=>{return(<Icon name="home-outline" size={25} color="#000" solid  />)}}} />
             <BottomTab.Screen name="Bookmark" component={Bookmark} options={{headerShown:false,tabBarIcon:()=>{return(<Icon name="bookmark-outline" size={25} color="#000" solid  />)}}} />
             <BottomTab.Screen name="ListenAudio" component={ListenAudio} options={{headerShown:false,tabBarIcon:()=>{return(<Icon name="music-circle-outline" size={25} color="#000" solid  />)}}} />
-            <BottomTab.Screen name="Current" component={Current} options={{headerShown:false,tabBarIcon:()=>{return(<Icon name="lightning-bolt-outline" size={25} color="#000" solid  />)}}} />
+            <BottomTab.Screen name="Current" component={Current} options={{headerShown:false,tabBarIcon:()=>{return(<Icon name="magnify" size={25} color="#000" solid  />)}}} />
             <BottomTab.Screen name="Profile" component={Profile} options={{headerShown:false,tabBarIcon:()=>{return(<Icon name="account-circle-outline" size={25} color="#000" solid  />)}}} />
 
         </BottomTab.Navigator>  );

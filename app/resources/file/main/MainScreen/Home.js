@@ -5,7 +5,6 @@ import Book from "../../../assets/json/bookList.json"
 
 const Home = ({navigation}) => {
   const [isEbook,setIsEbook]=useState(true);
-  const [isAudio,setIsAudio]=useState(false);
 
   const renderBook=({item})=>{
     return(

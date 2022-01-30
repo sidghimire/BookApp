@@ -8,7 +8,7 @@ import Book from "../../../assets/json/bookList.json"
 
 import {doc,setDoc,getDoc,getDocs,query,where,getFirestore, collection,onSnapShot} from 'firebase/firestore/lite';
 
-const Profile = () => {
+const Profile = ({navigation}) => {
   const db=getFirestore();
   const [isLoading,setIsLoading]=useState(false);
   const [isOwn,setIsOwn]=useState(true);
@@ -108,10 +108,10 @@ const Profile = () => {
         </View>
       </View>
       <View style={styles.toggleHeader}>
-        <TouchableOpacity activeOpacity={0.8} style={[styles.toggleButton,{flex:1,padding:10},isOwn?{backgroundColor:"#333"}:null]} onPress={()=>setIsOwn(true)}>
+        <TouchableOpacity activeOpacity={0.8} style={[styles.toggleButton,{flex:1,padding:10},isOwn?{backgroundColor:"#ccc"}:null]} onPress={()=>setIsOwn(true)}>
           <Icon name="billboard" size={30} style={{alignSelf:'center'}} color="#000" solid  />
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.8} style={[styles.toggleButton,{flex:1,padding:10,borderLeftWidth:1,borderColor:"#e9e9e9"},!isOwn?{backgroundColor:"#333"}:null]} onPress={()=>setIsOwn(false)}>
+        <TouchableOpacity activeOpacity={0.8} style={[styles.toggleButton,{flex:1,padding:10,borderLeftWidth:1,borderColor:"#e9e9e9"},!isOwn?{backgroundColor:"#ccc"}:null]} onPress={()=>setIsOwn(false)}>
           <Icon name="heart-multiple-outline" style={{alignSelf:'center'}} size={30} color="#000" solid  />
         </TouchableOpacity>
         
