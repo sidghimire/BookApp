@@ -5,6 +5,7 @@ import React,{useState} from 'react';
 
 
 const Current = ({navigation}) => {
+  const [counter,setCounter]=useState(5);
   const [searchText,setSearchText]=useState("");
   const [Ebook,setEbook]=useState(null);
   const [dataExists,setDataExists]=useState(false);
@@ -22,8 +23,8 @@ const Current = ({navigation}) => {
       }
     });
     setEbook(data);
-    if(data.length>=6){
-      setEbookRender(data.slice(0,6))
+    if(data.length>=counter){
+      setEbookRender(data.slice(0,counter))
     }else{
       setEbookRender(data.slice(0,data.length))
     }
@@ -32,12 +33,17 @@ const Current = ({navigation}) => {
       setDataExists(true);
     }
     if(text==""){
+      setCounter(5);
       setDataExists(false);
       setEbook(null);
     }
 
   }
+  const loadMoreFunction=()=>{
+    setCounter(counter+6);
+    onSearchChange(searchText);
 
+  }
   const renderSearchBook=({item})=>{
     let publishedDate="";
     if('publishedDate' in item){
@@ -86,7 +92,7 @@ const Current = ({navigation}) => {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}/>
           
-          <TouchableOpacity style={styles.loadMore} onPress={()=>{navigation.navigate("LoadMoreBooks")}}>
+          <TouchableOpacity style={styles.loadMore} onPress={()=>loadMoreFunction()} activeOpacity={0.8}>
             <Text style={styles.loadMoreText}>Load More</Text>
           </TouchableOpacity>
         </View>
