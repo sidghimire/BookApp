@@ -73,14 +73,7 @@ const Bookmark = ({navigation}) => {
         <Icon name="magnify" size={30} color="#000" solid  />
 
       </View>
-      <View style={styles.secondaryHeader}>
-        <TouchableOpacity style={[styles.secondaryHeaderButton,{backgroundColor:isEbook?"#f9f9f9":"#fff"}]} activeOpacity={0.8} onPress={()=>setIsEbook(true)}>
-          <Text style={styles.text1}>Ebook</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.secondaryHeaderButton,{backgroundColor:isEbook?"#fff":"#f9f9f9"}]} activeOpacity={0.8} onPress={()=>setIsEbook(false)}>
-          <Text style={styles.text1}>AudioBooks</Text>
-        </TouchableOpacity>
-      </View>
+     
           
       
       <View style={styles.feedBody}>
