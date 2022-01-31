@@ -2,11 +2,32 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList,Image, Touchable } f
 import React,{useState} from 'react';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import Book from "../../../assets/json/bookList.json"
+import Tts from 'react-native-tts';
 
 const Home = ({navigation}) => {
   const [isEbook,setIsEbook]=useState(true);
+  Tts.setDefaultLanguage('en-IE');
+
+  Tts.setDefaultRate(0.6);
+  Tts.setDefaultPitch(1.5);
+
+
+  const saySomething=()=>{
+    Tts.stop();
+    Tts.speak('Hello, world!');
+  }
 
   const renderBook=({item})=>{
+    return(
+      <TouchableOpacity style={styles.bookCardView} onPress={()=>navigation.navigate("OpenBook",{isbn:item['isbn']})} activeOpacity={0.7}>
+          <Image
+          style={styles.bookImage}
+          source={{uri:item['thumbnailUrl']}}
+          />      
+      </TouchableOpacity>
+    )
+  }
+  const renderAudioBook=({item})=>{
     return(
       <TouchableOpacity style={styles.bookCardView} onPress={()=>navigation.navigate("OpenBook",{isbn:item['isbn']})} activeOpacity={0.7}>
           <Image
@@ -36,15 +57,32 @@ const Home = ({navigation}) => {
         </TouchableOpacity>
       </View>
           
+      {isEbook?
+
       <View style={{flex:1,padding:20,paddingBottom:10,paddingTop:10,backgroundColor:"#f7f7f7"}}>
         <FlatList
+        key={'_'}
         data={Book}
         renderItem={renderBook}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         numColumns={2}
         />
+        
       </View>
+      :
+      <View style={{flex:1,padding:20,paddingBottom:10,paddingTop:10,backgroundColor:"#f7f7f7"}}>
+        <FlatList
+        key={'#'}
+        data={Book}
+        renderItem={renderAudioBook}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        numColumns={1}
+        />
+        
+      </View>
+      }
     </View>
 
   );

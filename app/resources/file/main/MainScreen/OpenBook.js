@@ -6,7 +6,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import { getAuth } from 'firebase/auth';
 import {doc,setDoc,deleteDoc,getDocs,query,where,getFirestore, collection,onSnapShot} from 'firebase/firestore/lite';
 import AppLoader from "../../../assets/animations/AppLoader.js";
-
+import Tts from 'react-native-tts';
 const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
 function generateString(length) {
@@ -20,6 +20,27 @@ function generateString(length) {
 }
 
 const OpenBook = ({route,navigation}) => {
+    const [speaking,setSpeaking]=useState(false);
+
+    Tts.setDefaultLanguage('en-IE');
+
+    Tts.setDefaultRate(0.52);
+    Tts.setDefaultPitch(1.5);
+  
+  
+    const saySomething=(a,b,c)=>{
+        Tts.stop();
+        if(speaking==false){
+            setSpeaking(true);
+            Tts.speak(a+" "+b+" "+c);
+        }else{
+            setSpeaking(false);
+            Tts.stop();
+        }
+    }
+  
+
+
     useEffect(() => {
  
         // Set the count variable value to Zero.
@@ -38,7 +59,6 @@ const OpenBook = ({route,navigation}) => {
         }
     }
     const [bookmark,setBookmark]=useState(false);
-    const publishedDate=(book['publishedDate']['$date']).split('T')[0];
     
     const db=getFirestore();
 
@@ -92,7 +112,10 @@ const OpenBook = ({route,navigation}) => {
         setIsLoading(false);
     }
     
-
+    let publishedDate="";
+    if('publishedDate' in book){
+    publishedDate=(book.publishedDate['$date']).split('T')[0];
+    }
   return (
     <View style={styles.container}>
         <ScrollView contentContainerStyle={{padding:20,paddingBottom:0}} >
@@ -110,6 +133,7 @@ const OpenBook = ({route,navigation}) => {
                 <Text style={{textAlign:'left',flex:1}}>
                     <Text style={{color:'#000'}}>Date:</Text> {publishedDate}
                 </Text>
+                <Icon name='bullhorn-outline' size={30} onPress={()=>saySomething(book['title'],book['shortDescription'],book['longDescription'])} color='#000' style={{paddingHorizontal:20,marginHorizontal:20,borderRadius:10,backgroundColor:"#c8c8c8"}}/>
                 <TouchableOpacity activeOpacity={0.8} style={{textAlign:'right',flex:1,paddingRight:20}} onPress={likeBook}>
                     {
                         (isLoading==null)?null:<Icon name={bookmark?'heart':'heart-outline'} size={30} color='#a83f39'/>
