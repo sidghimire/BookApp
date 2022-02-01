@@ -84,29 +84,14 @@ const Profile = ({navigation}) => {
         <Text style={styles.headerText}>
           Your Profile
         </Text>
-        <Icon name="cog-outline" size={30} color="#000" solid  />
+        <Icon name="cog-outline" onPress={()=>{navigation.navigate('CreateProfile')}} size={30} color="#000" solid  />
 
       </View>
-      <View>
+      <View style={{marginBottom:50}}>
         <Image source={blankProfile} style={styles.profileImage}/>
         <Text style={styles.profileName}>{name}</Text>
-        <Text style={styles.profileBio}>Bio: Hey How You Doing</Text>
       </View>
       
-      <View style={{flexDirection:'row',marginTop:20}}>
-        <View style={styles.profileStats}>
-          <Text style={styles.profileStatsNumber}>120</Text>
-          <Text style={styles.profileStatsLabel}>Viewed</Text>
-        </View>
-        <View style={[styles.profileStats]}>
-          <Text style={styles.profileStatsNumber}>120</Text>
-          <Text style={styles.profileStatsLabel}>Finished </Text>
-        </View>
-        <View style={[styles.profileStats]}>
-          <Text style={styles.profileStatsNumber}>120</Text>
-          <Text style={styles.profileStatsLabel}>Books Viewed</Text>
-        </View>
-      </View>
       <View style={styles.toggleHeader}>
         <TouchableOpacity activeOpacity={0.8} style={[styles.toggleButton,{flex:1,padding:10},isOwn?{backgroundColor:"#ccc"}:null]} onPress={()=>setIsOwn(true)}>
           <Icon name="billboard" size={30} style={{alignSelf:'center'}} color="#000" solid  />
@@ -140,7 +125,7 @@ const Profile = ({navigation}) => {
       </View>
       :
       <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
-          <Text style={{color:"#000"}}>You Havent Uploaded Any Books</Text>
+          <Text style={{color:"#000"}}>Sorry We Cant Allow Users To Upload Books At The Moment</Text>
         </View>
       }
       {

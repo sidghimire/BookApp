@@ -1,10 +1,28 @@
 import { View, Text, StyleSheet, TouchableOpacity, FlatList,Image, Touchable } from 'react-native';
-import React,{useState} from 'react';
+import React,{useEffect, useState} from 'react';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import Book from "../../../assets/json/bookList.json"
 import Tts from 'react-native-tts';
+import {getDocs,doc,collection, getFirestore} from 'firebase/firestore/lite'
 
-const Home = ({navigation}) => {
+
+
+
+const Home = ({navigation}) => {  
+  const db=getFirestore();
+  useEffect(() => {
+    getBooks();
+  }, [] );
+  const getBooks=async()=>{
+    const collectionDB=collection(db,'books');
+    await getDocs(collectionDB)
+    .then((docs)=>{
+      docs.forEach(doc=>{
+        console.log(doc.data());
+      })
+    })
+  }
+
   const [isEbook,setIsEbook]=useState(true);
   const [speaking,setSpeaking]=useState(false);
 

@@ -107,7 +107,7 @@ const CreateProfile = ({navigation}) => {
         </View>
         <View style={styles.textInputUnit}>
             <TouchableOpacity activeOpacity={0.8} style={styles.createNewProfile} onPress={onFormSubmit} >
-                <Text style={{color:"#fff",textAlign:'center'}}>Create Profile</Text>
+                <Text style={{color:"#fff",textAlign:'center'}}>Update Profile</Text>
             </TouchableOpacity>
         </View>
         {
